@@ -3,11 +3,11 @@ from flask_cors import CORS
 import os 
 import openai
 from dotenv import load_dotenv, find_dotenv
+_ = load_dotenv(find_dotenv())
 from openai_integration import get_completion, get_completion_from_messages
 
-
-load_dotenv(find_dotenv())
-
+openai.api_key  = os.getenv('OPENAI_API_KEY')
+system_role_content = os.getenv('SYSTEM_ROLE_CONTENT')
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all origins
@@ -18,8 +18,13 @@ def chat():
     try:
         data = request.json
         message = data.get('message', '')
-
-        completion = get_completion(prompt=message, model="gpt-3.5-turbo")
+        
+        messages = [ 
+                    {'role':'system', 'content': system_role_content},
+                    {'role':'user', 'content': message}
+                    ]
+        completion = get_completion_from_messages(messages, temperature=1)
+        # completion = "Answer from the chatbox"
 
         return jsonify({"response": completion})
 
