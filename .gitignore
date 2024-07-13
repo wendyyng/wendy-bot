@@ -1,0 +1,29 @@
+# Ignore environment variables
+.env
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+*.log
+
+# Dependency directories
+/venv/
+/env/
+.venv/
+
+# Python specific
+__pycache__/
+*.pyc
+
+# IDE specific
+.idea/
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
