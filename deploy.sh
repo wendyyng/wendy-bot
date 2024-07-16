@@ -1,25 +1,33 @@
 #!/bin/bash
 
 echo "deleting old app"
-sudo rm -rf /var/www/
+sudo rm -rf /var/www/wendy-bot
 
 echo "creating app folder"
 sudo mkdir -p /var/www/wendy-bot
 
 echo "moving files to app folder"
-sudo mv  * /var/www/wendy-bot
+sudo mv * /var/www/wendy-bot
 
 # Navigate to the app directory
-cd /var/www/wendy-bot/
+cd /var/www/wendy-bot
 sudo mv env .env
 
+# Ensure system packages are up to date
 sudo apt-get update
+
+# Install Python, pip, and venv if not already installed
 echo "installing python and pip"
-sudo apt-get install -y python3 python3-pip
+sudo apt-get install -y python3 python3-pip python3-venv
+
+# Create and activate virtual environment
+echo "creating virtual environment"
+python3 -m venv venv
+source venv/bin/activate
 
 # Install application dependencies from requirements.txt
-echo "Install application dependencies from requirements.txt"
-sudo pip install -r requirements.txt
+echo "installing application dependencies"
+venv/bin/pip install -r requirements.txt
 
 # Update and install Nginx if not already installed
 if ! command -v nginx > /dev/null; then
@@ -50,12 +58,10 @@ else
 fi
 
 # Stop any existing Gunicorn process
-sudo pkill gunicorn
-sudo rm -rf myapp.sock
+sudo pkill gunicorn || true
+sudo rm -rf /var/www/wendy-bot/myapp.sock
 
-# # Start Gunicorn with the Flask application
-# # Replace 'server:app' with 'yourfile:app' if your Flask instance is named differently.
-# # gunicorn --workers 3 --bind 0.0.0.0:8000 server:app &
+# Start Gunicorn with the Flask application
 echo "starting gunicorn"
-sudo gunicorn --workers 3 --bind unix:myapp.sock  server:app --user www-data --group www-data --daemon
+sudo /var/www/wendy-bot/venv/bin/gunicorn --workers 3 --bind unix:/var/www/wendy-bot/myapp.sock app:app --user www-data --group www-data --daemon
 echo "started gunicorn 🚀"
