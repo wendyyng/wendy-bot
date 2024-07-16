@@ -65,6 +65,6 @@ sudo rm -rf /var/www/wendy-bot/myapp.sock
 # Start Gunicorn with the Flask application
 # gunicorn --workers 3 --bind 0.0.0.0:8000 server:app &
 echo "Starting Gunicorn"
-sudo gunicorn --workers 3 --bind unix:myapp.sock  app:app --user www-data --group www-data --daemon
-
+sudo /var/www/wendy-bot/venv/bin/gunicorn --workers 3 --bind unix:/var/www/wendy-bot/myapp.sock app:app --user www-data --group www-data --daemon
+# sudo gunicorn --workers 3 --bind unix:myapp.sock  app:app --user www-data --group www-data --daemon
 echo "Started Gunicorn 🚀"
