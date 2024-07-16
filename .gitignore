@@ -42,3 +42,5 @@ awscliv2.zip
 
 # Ignore AWS configuration directory (if it contains sensitive information)
 aws/
+
+ec2.pem
