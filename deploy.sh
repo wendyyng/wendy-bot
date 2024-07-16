@@ -1,33 +1,32 @@
 #!/bin/bash
 
-echo "deleting old app"
+echo "Deleting old app"
 sudo rm -rf /var/www/wendy-bot
 
-echo "creating app folder"
+echo "Creating app folder"
 sudo mkdir -p /var/www/wendy-bot
 
-echo "moving files to app folder"
-sudo mv * /var/www/wendy-bot
-
-# Navigate to the app directory
+echo "Moving files to app folder"
+sudo cp -r . /var/www/wendy-bot
 cd /var/www/wendy-bot
+
+# Create and move the .env file
 sudo mv env .env
 
-# Ensure system packages are up to date
+# Update system packages
 sudo apt-get update
 
-# Install Python, pip, and venv if not already installed
-echo "installing python and pip"
+echo "Installing python and pip"
 sudo apt-get install -y python3 python3-pip python3-venv
 
-# Create and activate virtual environment
-echo "creating virtual environment"
-python3 -m venv venv
-source venv/bin/activate
+# Create virtual environment
+echo "Creating virtual environment"
+sudo python3 -m venv /var/www/wendy-bot/venv
 
-# Install application dependencies from requirements.txt
-echo "installing application dependencies"
-venv/bin/pip install -r requirements.txt
+# Activate virtual environment and install dependencies
+echo "Installing application dependencies"
+source /var/www/wendy-bot/venv/bin/activate
+/var/www/wendy-bot/venv/bin/pip install -r requirements.txt
 
 # Update and install Nginx if not already installed
 if ! command -v nginx > /dev/null; then
@@ -62,6 +61,6 @@ sudo pkill gunicorn || true
 sudo rm -rf /var/www/wendy-bot/myapp.sock
 
 # Start Gunicorn with the Flask application
-echo "starting gunicorn"
+echo "Starting Gunicorn"
 sudo /var/www/wendy-bot/venv/bin/gunicorn --workers 3 --bind unix:/var/www/wendy-bot/myapp.sock app:app --user www-data --group www-data --daemon
-echo "started gunicorn 🚀"
+echo "Started Gunicorn 🚀"
