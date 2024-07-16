@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout current branch
+      - name: Checkout current branch 
         uses: actions/checkout@v2
 
       - name: Set up SSH key and whitelist EC2 IP address
@@ -24,7 +24,6 @@ jobs:
           ENV: ${{ secrets.ENV }}
           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          SYSTEM_ROLE_CONTENT: ${{ secrets.SYSTEM_ROLE_CONTENT }}
         run: |
           echo "ENV=${ENV}" >> env
           echo "EC2_USERNAME=${EC2_USERNAME}" >> env
@@ -38,13 +37,13 @@ jobs:
         run: |
           scp -r * $EC2_USERNAME@$EC2_HOST:/home/ubuntu/
 
-      - name: Run Bash Script To Deploy App 🚀
+      - name: Run Bash Script To Delpoy App 🚀
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
         run: |
-          ssh -o Strictssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "chmod +x ./deploy.sh && ./deploy.sh"
-      
+           ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "/var/www/wendy-bot/venv/bin/gunicorn --workers 3 --bind unix:/var/www/wendy-bot/myapp.sock app:app --user www-data --group www-data --daemon --log-level=debug"
+
       - name: Clean up SSH key 🚀
         if: always()
         run: rm -f ~/.ssh/id_rsa
