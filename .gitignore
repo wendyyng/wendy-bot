@@ -19,6 +19,10 @@ logs/
 # Python specific
 __pycache__/
 *.pyc
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
 
 # IDE specific
 .idea/
@@ -27,3 +31,14 @@ __pycache__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# Ignore AWS CLI installation file
+awscliv2.zip
+
+# Ignore AWS configuration directory (if it contains sensitive information)
+aws/
