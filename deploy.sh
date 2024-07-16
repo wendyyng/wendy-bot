@@ -8,6 +8,7 @@ sudo mkdir -p /var/www/wendy-bot
 
 echo "Moving files to app folder"
 sudo cp -r . /var/www/wendy-bot
+
 cd /var/www/wendy-bot
 
 # Create and move the .env file
@@ -22,11 +23,12 @@ sudo apt-get install -y python3 python3-pip python3-venv
 # Create virtual environment
 echo "Creating virtual environment"
 sudo python3 -m venv /var/www/wendy-bot/venv
+sudo chown -R $USER:$USER /var/www/wendy-bot/venv
 
 # Activate virtual environment and install dependencies
 echo "Installing application dependencies"
 source /var/www/wendy-bot/venv/bin/activate
-/var/www/wendy-bot/venv/bin/pip install -r requirements.txt
+pip install -r requirements.txt
 
 # Update and install Nginx if not already installed
 if ! command -v nginx > /dev/null; then
