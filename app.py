@@ -15,14 +15,6 @@ CORS(app)  # Enable CORS for all origins
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    if request.method == 'OPTIONS':
-        # Handle CORS preflight request
-        headers = {
-            'Access-Control-Allow-Origin': 'http://localhost:3000',  # Adjust origin as needed
-            'Access-Control-Allow-Methods': 'POST',
-            'Access-Control-Allow-Headers': 'Content-Type',
-        }
-        return ('', 204, headers)  # Return empty body with headers for OPTIONS
     
     try:
         data = request.json
