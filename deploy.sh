@@ -48,7 +48,6 @@ server {
     location / {
         include proxy_params;
         proxy_pass http://unix:/var/www/wendy-bot/myapp.sock;
-        proxy_redirect off;
     }
 }
 EOF'
