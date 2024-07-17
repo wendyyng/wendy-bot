@@ -6,6 +6,7 @@ This chatbot is developed to provide information about Wendy. It leverages promp
 
 - Python
 - Flask
+- ChatGPT Prompt Engineering
 - OpenAI's GPT-3.5 Turbo API
 - AWS EC2
-- GitHub Actions
+- CI/CD with GitHub Actions
