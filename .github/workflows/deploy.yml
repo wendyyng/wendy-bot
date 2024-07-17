@@ -24,6 +24,7 @@ jobs:
           ENV: ${{ secrets.ENV }}
           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SYSTEM_ROLE_CONTENT: ${{ secrets.SYSTEM_ROLE_CONTENT }}
         run: |
           echo "ENV=${ENV}" >> env
           echo "EC2_USERNAME=${EC2_USERNAME}" >> env
@@ -42,7 +43,7 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
         run: |
-           ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "/var/www/wendy-bot/venv/bin/gunicorn --workers 3 --bind unix:/var/www/wendy-bot/myapp.sock app:app --user www-data --group www-data --daemon --log-level=debug"
+           ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "chmod +x /home/ubuntu/deploy.sh && /home/ubuntu/deploy.sh"
 
       - name: Clean up SSH key 🚀
         if: always()
