@@ -2,6 +2,7 @@
 
 This chatbot utilizes prompt engineering to provide a seamless and interactive experience, answering questions about Wendy's background, skills, and projects.
 Feel free to interact with it and ask questions in any language. Please note that this chatbot is designed exclusively to provide information about Wendy and is not intended for other purposes.
+See the frontend's repo here: https://github.com/wendyyng/react-portfolio
 
 ## Link
 https://wendy-ng.vercel.app/
