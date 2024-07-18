@@ -2,14 +2,6 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
-# Load environment variables from the .env file
-if [ -f ".env" ]; then
-    export $(grep -v '^#' .env | xargs)
-else
-    echo ".env file not found!"
-    exit 1
-fi
-
 APP_DIR="/var/www/wendy-bot"
 
 echo "Deleting old app"
