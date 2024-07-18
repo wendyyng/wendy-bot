@@ -1,7 +1,7 @@
 # Wendy Bot for Wendy's Portfolio Website
 
-This chatbot is developed to provide information about Wendy. It leverages prompt engineering to offer a seamless and interactive experience, answering all your questions about Wendy's background, skills, and projects.
-Feel free to interact with it and ask questions about Wendy in any language. Please note that this chatbot is specifically designed to provide information about Wendy and is not intended for other purposes.
+This chatbot utilizes prompt engineering to provide a seamless and interactive experience, answering questions about Wendy's background, skills, and projects.
+Feel free to interact with it and ask questions about Wendy in any language. Please note that this chatbot is designed exclusively to provide information about Wendy and is not intended for other purposes.
 
 ## Link
 https://wendy-ng.vercel.app/
