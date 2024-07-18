@@ -53,7 +53,7 @@ if [ ! -f /etc/nginx/sites-available/myapp ]; then
     sudo bash -c 'cat > /etc/nginx/sites-available/myapp <<EOF
 server {
     listen 80;
-    server_name $DOMAIN;
+    server_name api.wendy-ng.dev;
 
     location / {
         include proxy_params;
