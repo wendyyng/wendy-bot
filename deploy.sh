@@ -53,7 +53,20 @@ if [ ! -f /etc/nginx/sites-available/myapp ]; then
     sudo bash -c 'cat > /etc/nginx/sites-available/myapp <<EOF
 server {
     listen 80;
-    server_name api.wendy-ng.dev;
+    server_name _;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:$APP_DIR/myapp.sock;
+    }
+}
+server {
+    listen              443 ssl;
+    server_name         api.wendy-ng.dev;
+    ssl_certificate /etc/letsencrypt/live/api.wendy-ng.dev/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.wendy-ng.dev/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf; 
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     location / {
         include proxy_params;
