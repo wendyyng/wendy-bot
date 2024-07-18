@@ -23,11 +23,13 @@ jobs:
         env:
           ENV: ${{ secrets.ENV }}
           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          DOMAIN: ${{ secrets.DOMAIN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           SYSTEM_ROLE_CONTENT: ${{ secrets.SYSTEM_ROLE_CONTENT }}
         run: |
           echo "ENV=${ENV}" >> env
           echo "EC2_USERNAME=${EC2_USERNAME}" >> env
+          echo "DOMAIN=${DOMAIN}" >> env
           echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> env
           echo "SYSTEM_ROLE_CONTENT=${SYSTEM_ROLE_CONTENT}" >> env
 
