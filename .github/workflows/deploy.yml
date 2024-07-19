@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "integration"
+    paths-ignore:
+      - "README.md"
 
 jobs:
   deploy:
