@@ -25,8 +25,7 @@ def chat():
                     {'role':'user', 'content': message}
                     ]
         completion = get_completion_from_messages(messages, temperature=1)
-        # completion = "Answer from the chatbox"
-
+        
         return jsonify({"response": completion})
 
     except Exception as e:
