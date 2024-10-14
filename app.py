@@ -12,7 +12,6 @@ system_role_content = os.getenv('SYSTEM_ROLE_CONTENT')
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all origins
 
-
 @app.route('/api/chat', methods=['POST'])
 def chat():
     
