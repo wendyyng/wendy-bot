@@ -14,23 +14,24 @@ CORS(app)  # Enable CORS for all origins
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    
     try:
         data = request.json
-        message = data.get('message', '')
-        
-        messages = [ 
-                    {'role':'system', 'content': system_role_content},
-                    {'role':'user', 'content': message}
-                    ]
-        completion = get_completion_from_messages(messages, temperature=1)
-        
+        user_messages = data.get('messages', [])
+
+        # Inject system prompt if not already included
+        if not any(m.get("role") == "system" for m in user_messages):
+            user_messages.insert(0, {
+                "role": "system",
+                "content": system_role_content
+            })
+
+        completion = get_completion_from_messages(user_messages, temperature=1)
         return jsonify({"response": completion})
 
     except Exception as e:
-        # Log the exception to diagnose the issue
         print(f"Error processing request: {str(e)}")
         return jsonify({"error": "An error occurred while processing your request."}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
