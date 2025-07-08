@@ -19,5 +19,5 @@ https://wendy-ng.vercel.app/
 - Flask
 - ChatGPT Prompt Engineering
 - OpenAI's GPT-4o-mini API
-- AWS EC2
-- CI/CD with GitHub Actions
+- Render for deployment (Previously hosted on AWS EC2)
+- GitHub Actions (Used for CI/CD during AWS EC2 deployment)
