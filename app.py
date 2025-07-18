@@ -17,10 +17,10 @@ email_recipient = os.getenv('EMAIL_TO') or email_sender
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all origins
 
-
 def send_email(subject, body):
     try:
-        msg = MIMEText(body)
+        # Explicitly set UTF-8 encoding
+        msg = MIMEText(body, _charset='utf-8')
         msg['Subject'] = subject
         msg['From'] = email_sender
         msg['To'] = email_recipient
