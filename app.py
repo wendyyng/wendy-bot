@@ -3,6 +3,7 @@ from flask_cors import CORS
 from datetime import datetime
 from email.message import EmailMessage
 from email.header import Header
+from email.utils import formataddr
 import smtplib
 import unicodedata
 import email.charset
@@ -33,9 +34,10 @@ def send_email(subject, body):
         msg = EmailMessage()
         msg.set_content(body, charset='utf-8')
 
-        msg['Subject'] = Header(subject, 'utf-8')
-        msg['From'] = Header(email_sender, 'utf-8')
-        msg['To'] = Header(email_recipient, 'utf-8')
+        # Properly encode headers
+        msg['Subject'] = str(Header(subject, 'utf-8'))
+        msg['From'] = formataddr((str(Header("Chatbot", 'utf-8')), email_sender))
+        msg['To'] = str(Header(email_recipient, 'utf-8'))
 
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(email_sender, email_password)
