@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import smtplib
 from email.message import EmailMessage
+import email.charset
 import os 
 import openai
 from dotenv import load_dotenv, find_dotenv
@@ -17,13 +18,16 @@ email_recipient = os.getenv('EMAIL_TO') or email_sender
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all origins
 
+# Use UTF-8 as default encoding for all email content
+email.charset.add_charset('utf-8', email.charset.SHORTEST, None, 'utf-8')
+
 def send_email(subject, body):
     try:
         msg = EmailMessage()
-        msg.set_content(body, charset='utf-8')
-        msg['Subject'] = subject
-        msg['From'] = email_sender
-        msg['To'] = email_recipient
+        msg.set_content(body, charset='utf-8') 
+        msg['Subject'] = str(subject)           
+        msg['From'] = str(email_sender)
+        msg['To'] = str(email_recipient)
 
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(email_sender, email_password)
