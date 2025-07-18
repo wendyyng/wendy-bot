@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import smtplib
-from email.mime.text import MIMEText
+from email.message import EmailMessage
 import os 
 import openai
 from dotenv import load_dotenv, find_dotenv
@@ -19,8 +19,8 @@ CORS(app)  # Enable CORS for all origins
 
 def send_email(subject, body):
     try:
-        # Explicitly set UTF-8 encoding
-        msg = MIMEText(body, _charset='utf-8')
+        msg = EmailMessage()
+        msg.set_content(body, charset='utf-8')
         msg['Subject'] = subject
         msg['From'] = email_sender
         msg['To'] = email_recipient
