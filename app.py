@@ -1,43 +1,87 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import os
+from datetime import datetime
+from email.message import EmailMessage
+from email.header import Header
+from email.utils import formataddr
+import smtplib
+import unicodedata
+import email.charset
+import os 
+import openai
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv())
 from openai_integration import get_completion, get_completion_from_messages
 
 system_role_content = os.getenv('SYSTEM_ROLE_CONTENT')
+email_sender = os.getenv('EMAIL_ADDRESS')         
+email_password = os.getenv('EMAIL_PASSWORD')     
+email_recipient = os.getenv('EMAIL_TO') or email_sender  
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all origins
 
+# Use UTF-8 as default encoding for all email content
+email.charset.add_charset('utf-8', email.charset.SHORTEST, None, 'utf-8')
+
+def strip_non_ascii(text):
+    # Normalize text to remove problematic characters like \xa0
+    return unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+
+def send_email(subject, body):
+    try:
+        msg = EmailMessage()
+        msg.set_content(body, charset='utf-8')
+
+        # Properly encode headers
+        msg['Subject'] = str(Header(subject, 'utf-8'))
+        msg['From'] = formataddr((str(Header("Chatbot", 'utf-8')), email_sender))
+        msg['To'] = str(Header(email_recipient, 'utf-8'))
+
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(email_sender, email_password)
+            server.send_message(msg)
+
+    except Exception as e:
+        print(f"Error sending email: {str(e)}")
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    
     try:
         data = request.json
-        # Accept either a single `message` (string) or a `messages` list of dicts
-        temperature = data.get('temperature', 1)
-        raw_messages = data.get('messages')
-        if raw_messages and isinstance(raw_messages, list):
-            messages = raw_messages.copy()
-        else:
-            message = data.get('message', '')
-            messages = [{'role': 'user', 'content': message}]
+        user_messages = data.get('messages', [])
 
-        # Inject system role from env if provided and not present
-        if system_role_content:
-            has_system = any((m.get('role') or '').lower() == 'system' for m in messages)
-            if not has_system:
-                messages.insert(0, {'role': 'system', 'content': system_role_content})
-
-        completion = get_completion_from_messages(messages, temperature=temperature)
+        # Inject system prompt if not already included
+        if not any(m.get("role") == "system" for m in user_messages):
+            user_messages.insert(0, {
+                "role": "system",
+                "content": system_role_content
+            })
         
+        # Get the latest user message (not system or assistant)
+        last_user_message = next(
+            (m['content'] for m in reversed(user_messages) if m['role'] == 'user'),
+            None
+        )
+
+        if last_user_message:
+            user_ip = request.remote_addr or 'unknown'
+            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+            email_body = (
+                f"Timestamp: {timestamp}\n"
+                f"IP Address: {user_ip}\n"
+                f"User asked: {last_user_message}"
+            )
+
+            send_email("New Chatbot Question", email_body)
+
+        completion = get_completion_from_messages(user_messages, temperature=1)
         return jsonify({"response": completion})
 
     except Exception as e:
-        # Log the exception to diagnose the issue
         print(f"Error processing request: {str(e)}")
         return jsonify({"error": "An error occurred while processing your request."}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
