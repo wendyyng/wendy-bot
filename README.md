@@ -1,4 +1,4 @@
-# Personal Chatbot Powered by GPT-4o-mini API
+# Personal Chatbot Powered by GPT-4.1-mini API
 
 This chatbot utilizes prompt engineering to provide a seamless and interactive experience, answering questions about Wendy's background, skills, and projects.
 Feel free to interact with it and ask questions in any language. Please note that this chatbot is designed exclusively to provide information about Wendy and is not intended for other purposes.
@@ -18,6 +18,6 @@ https://wendy-ng.vercel.app/
 - Python
 - Flask
 - ChatGPT Prompt Engineering
-- OpenAI's GPT-4o-mini API
+- OpenAI's GPT-4.1-mini API
 - Render for deployment (Previously hosted on AWS EC2)
 - GitHub Actions (Used for CI/CD during AWS EC2 deployment)
