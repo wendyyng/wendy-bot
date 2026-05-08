@@ -13,7 +13,6 @@ from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv())
 from openai_integration import get_completion, get_completion_from_messages
 
-openai.api_key  = os.getenv('OPENAI_API_KEY')
 system_role_content = os.getenv('SYSTEM_ROLE_CONTENT')
 email_sender = os.getenv('EMAIL_ADDRESS')         
 email_password = os.getenv('EMAIL_PASSWORD')     
