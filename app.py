@@ -58,12 +58,29 @@ def chat():
                 "message": last_user_message
             }, ensure_ascii=False))
 
-        completion = get_completion_from_messages(user_messages, temperature=1)
-        return jsonify({"response": completion})
+        try:
+            completion = get_completion_from_messages(user_messages, temperature=1)
+            return jsonify({"response": completion}), 200
+        except Exception as oe:
+            # Differentiate OpenAI errors vs other errors. If the OpenAI client
+            # raises a specific exception type in your environment you can
+            # import and catch it (e.g., openai.error.OpenAIError). Here we
+            # inspect the exception to provide a structured response.
+            err_msg = str(oe)
+            logger.error(json.dumps({
+                "event": "openai_error",
+                "error": err_msg
+            }, ensure_ascii=False))
+            return jsonify({"error": "openai_error", "message": err_msg}), 502
 
     except Exception as e:
-        print(f"Error processing request: {str(e)}")
-        return jsonify({"error": "An error occurred while processing your request."}), 500
+        # System-level errors (bad request payloads, coding errors, etc.)
+        err_msg = str(e)
+        logger.error(json.dumps({
+            "event": "system_error",
+            "error": err_msg
+        }, ensure_ascii=False))
+        return jsonify({"error": "system_error", "message": err_msg}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
